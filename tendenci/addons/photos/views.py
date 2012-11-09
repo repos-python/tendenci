@@ -28,6 +28,7 @@ from tendenci.core.site_settings.utils import get_setting
 from tendenci.core.event_logs.models import EventLog
 from tendenci.core.files.utils import get_image, aspect_ratio, generate_image_cache_key
 from tendenci.apps.user_groups.models import Group
+from tendenci.apps.redirects.models import Redirect
 from djcelery.models import TaskMeta
 
 from tendenci.addons.photos.cache import PHOTO_PRE_KEY
@@ -40,6 +41,9 @@ from tendenci.addons.photos.tasks import ZipPhotoSetTask
 
 def search(request, template_name="photos/search.html"):
     """ Photos search """
+    if not get_setting('module', 'photos', 'enabled'):
+        redirect = get_object_or_404(Redirect, from_app='photo albums')
+        return HttpResponseRedirect('/' + redirect.to_url)
     
     query = request.GET.get('q', None)
     if get_setting('site', 'global', 'searchindex') and query:
@@ -100,6 +104,9 @@ def sizes(request, id, size_name='', template_name="photos/sizes.html"):
 
 def photo(request, id, set_id=0, partial=False, template_name="photos/details.html"):
     """ photo details """
+    if not get_setting('module', 'photos', 'enabled'):
+        redirect = get_object_or_404(Redirect, from_app='photo albums')
+        return HttpResponseRedirect('/' + redirect.to_url)
 
     photo = get_object_or_404(Image, id=id)
     if not has_perm(request.user, 'photos.view_image', photo):
@@ -278,6 +285,9 @@ def memberphotos(request, username, template_name="photos/memberphotos.html", gr
 @login_required
 def edit(request, id, set_id=0, form_class=PhotoEditForm, template_name="photos/edit.html"):
     """ edit photo view """
+    if not get_setting('module', 'photos', 'enabled'):
+        redirect = get_object_or_404(Redirect, from_app='photo albums')
+        return HttpResponseRedirect('/' + redirect.to_url)
     
     # get photo
     photo = get_object_or_404(Image, id=id)
@@ -328,6 +338,10 @@ def edit(request, id, set_id=0, form_class=PhotoEditForm, template_name="photos/
 @login_required
 def delete(request, id, set_id=0):
     """ delete photo """
+    if not get_setting('module', 'photos', 'enabled'):
+        redirect = get_object_or_404(Redirect, from_app='photo albums')
+        return HttpResponseRedirect('/' + redirect.to_url)
+    
     photo = get_object_or_404(Image, id=id)
 
     # permissions
@@ -363,6 +377,9 @@ def delete(request, id, set_id=0):
 @login_required
 def photoset_add(request, form_class=PhotoSetAddForm, template_name="photos/photo-set/add.html"):
     """ Add a photo set """
+    if not get_setting('module', 'photos', 'enabled'):
+        redirect = get_object_or_404(Redirect, from_app='photo albums')
+        return HttpResponseRedirect('/' + redirect.to_url)
 
     # if no permission; permission exception
     if not has_perm(request.user,'photos.add_photoset'):
@@ -402,6 +419,10 @@ def photoset_add(request, form_class=PhotoSetAddForm, template_name="photos/phot
 
 @login_required
 def photoset_edit(request, id, form_class=PhotoSetEditForm, template_name="photos/photo-set/edit.html"):
+    if not get_setting('module', 'photos', 'enabled'):
+        redirect = get_object_or_404(Redirect, from_app='photo albums')
+        return HttpResponseRedirect('/' + redirect.to_url)
+
     from tendenci.core.perms.object_perms import ObjectPermission
     photo_set = get_object_or_404(PhotoSet, id=id)
 
@@ -452,6 +473,10 @@ def photoset_edit(request, id, form_class=PhotoSetEditForm, template_name="photo
 
 @login_required
 def photoset_delete(request, id, template_name="photos/photo-set/delete.html"):
+    if not get_setting('module', 'photos', 'enabled'):
+        redirect = get_object_or_404(Redirect, from_app='photo albums')
+        return HttpResponseRedirect('/' + redirect.to_url)
+    
     photo_set = get_object_or_404(PhotoSet, id=id)
 
     # if no permission; permission exception
@@ -487,6 +512,9 @@ def photoset_delete(request, id, template_name="photos/photo-set/delete.html"):
 
 def photoset_view_latest(request, template_name="photos/photo-set/latest.html"):
     """ View latest photo set """
+    if not get_setting('module', 'photos', 'enabled'):
+        redirect = get_object_or_404(Redirect, from_app='photo albums')
+        return HttpResponseRedirect('/' + redirect.to_url)
 
     query = request.GET.get('q', None)
     if get_setting('site', 'global', 'searchindex') and query:
@@ -507,6 +535,10 @@ def photoset_view_latest(request, template_name="photos/photo-set/latest.html"):
 @login_required
 def photoset_view_yours(request, template_name="photos/photo-set/yours.html"):
     """ View your photo set """
+    if not get_setting('module', 'photos', 'enabled'):
+        redirect = get_object_or_404(Redirect, from_app='photo albums')
+        return HttpResponseRedirect('/' + redirect.to_url)
+    
     photo_sets = PhotoSet.objects.all()
     return render_to_response(template_name, {
         "photo_sets": photo_sets,
@@ -525,6 +557,10 @@ def photos_batch_add(request, photoset_id=0):
     on http request:
         photoset_id is passed via url
     """
+    if not get_setting('module', 'photos', 'enabled'):
+        redirect = get_object_or_404(Redirect, from_app='photo albums')
+        return HttpResponseRedirect('/' + redirect.to_url)
+    
     import uuid
     from tendenci.core.perms.object_perms import ObjectPermission
 
@@ -627,6 +663,10 @@ def photos_batch_add(request, photoset_id=0):
 @login_required
 def photos_batch_edit(request, photoset_id=0, template_name="photos/batch-edit.html"):
     """ change multiple photos with one "save button" click """
+    if not get_setting('module', 'photos', 'enabled'):
+        redirect = get_object_or_404(Redirect, from_app='photo albums')
+        return HttpResponseRedirect('/' + redirect.to_url)
+    
     photo_set = get_object_or_404(PhotoSet, id=photoset_id)
     if not photo_set.check_perm(request.user, 'photos.change_photoset'):
         raise Http403
@@ -710,6 +750,9 @@ def photos_batch_edit(request, photoset_id=0, template_name="photos/batch-edit.h
 
 def photoset_details(request, id, template_name="photos/photo-set/details.html"):
     """ View photos in photo set """
+    if not get_setting('module', 'photos', 'enabled'):
+        redirect = get_object_or_404(Redirect, from_app='photo albums')
+        return HttpResponseRedirect('/' + redirect.to_url)
 
     photo_set = get_object_or_404(PhotoSet, id=id)
     if not has_view_perm(request.user, 'photos.view_photoset', photo_set):

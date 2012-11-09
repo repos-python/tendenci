@@ -20,9 +20,14 @@ from tendenci.core.exports.utils import run_export_task
 from tendenci.apps.notifications.utils import send_notifications
 from tendenci.apps.invoices.models import Invoice
 from tendenci.apps.invoices.forms import AdminNotesForm, AdminAdjustForm
+from tendenci.apps.redirects.models import Redirect
 
 
 def view(request, id, guid=None, form_class=AdminNotesForm, template_name="invoices/view.html"):
+    if not get_setting('module', 'invoices', 'enabled'):
+        redirect = get_object_or_404(Redirect, from_app='invoices')
+        return HttpResponseRedirect('/' + redirect.to_url)
+
     #if not id: return HttpResponseRedirect(reverse('invoice.search'))
     invoice = get_object_or_404(Invoice, pk=id)
 
@@ -78,6 +83,10 @@ def mark_as_paid(request, id):
 
 @login_required
 def search(request, template_name="invoices/search.html"):
+    if not get_setting('module', 'invoices', 'enabled'):
+        redirect = get_object_or_404(Redirect, from_app='invoices')
+        return HttpResponseRedirect('/' + redirect.to_url)
+
     query = request.GET.get('q', None)
     bill_to_email = request.GET.get('bill_to_email', None)
 
@@ -149,6 +158,10 @@ def search_report(request, template_name="invoices/search.html"):
 
     
 def adjust(request, id, form_class=AdminAdjustForm, template_name="invoices/adjust.html"):
+    if not get_setting('module', 'invoices', 'enabled'):
+        redirect = get_object_or_404(Redirect, from_app='invoices')
+        return HttpResponseRedirect('/' + redirect.to_url)
+
     #if not id: return HttpResponseRedirect(reverse('invoice.search'))
     invoice = get_object_or_404(Invoice, pk=id)
     original_total = invoice.total
@@ -206,6 +219,10 @@ def adjust(request, id, form_class=AdminAdjustForm, template_name="invoices/adju
 
     
 def detail(request, id, template_name="invoices/detail.html"):
+    if not get_setting('module', 'invoices', 'enabled'):
+        redirect = get_object_or_404(Redirect, from_app='invoices')
+        return HttpResponseRedirect('/' + redirect.to_url)
+
     invoice = get_object_or_404(Invoice, pk=id)
 
     if not (request.user.profile.is_superuser or has_perm(request.user, 'invoices.change_invoice')): raise Http403
@@ -244,6 +261,10 @@ def detail(request, id, template_name="invoices/detail.html"):
 
 @login_required
 def export(request, template_name="invoices/export.html"):
+    if not get_setting('module', 'invoices', 'enabled'):
+        redirect = get_object_or_404(Redirect, from_app='invoices')
+        return HttpResponseRedirect('/' + redirect.to_url)
+
     """Export Invoices"""
     
     if not request.user.is_superuser:
