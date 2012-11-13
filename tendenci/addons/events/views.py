@@ -225,7 +225,7 @@ def search(request, redirect=False, template_name="events/search.html"):
             events = events.select_related()
 
     if with_registration:
-        events = events.filter(registration_configuration__isnull=False)
+        events = events.filter(registration_configuration__enabled=True)
 
     events = events.order_by('start_dt')
     types = Type.objects.all().order_by('name')
