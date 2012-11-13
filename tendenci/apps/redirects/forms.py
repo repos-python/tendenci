@@ -23,7 +23,8 @@ class RedirectForm(forms.ModelForm):
         if value:
             try:
                 exists = Redirect.objects.get(from_app = value)
-                raise forms.ValidationError(_("Redirect for this app already exists."))
+                if exists.pk != self.instance.pk:
+                    raise forms.ValidationError(_("Redirect for this app already exists."))
             except Redirect.DoesNotExist:
                 pass
         return value
@@ -34,7 +35,8 @@ class RedirectForm(forms.ModelForm):
         if value:
             try:
                 exists = Redirect.objects.get(from_url = value)
-                raise forms.ValidationError(_("Redirect for this url already exists."))
+                if exists.pk != self.instance.pk:
+                    raise forms.ValidationError(_("Redirect for this url already exists."))
             except Redirect.DoesNotExist:
                 pass
         return value
