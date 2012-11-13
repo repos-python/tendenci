@@ -202,6 +202,7 @@ def search(request, redirect=False, template_name="events/search.html"):
     query = request.GET.get('q', None)
     event_type = request.GET.get('event_type', None)
     start_dt = request.GET.get('start_dt', None)
+    with_registration = request.GET.get('registration', None)
     try:
         start_dt = datetime.strptime(start_dt, '%Y-%m-%d')
     except:
@@ -223,6 +224,9 @@ def search(request, redirect=False, template_name="events/search.html"):
         if request.user.is_authenticated():
             events = events.select_related()
 
+    if with_registration:
+        events = events.filter(registration_configuration__isnull=False)
+
     events = events.order_by('start_dt')
     types = Type.objects.all().order_by('name')
 
@@ -230,7 +234,7 @@ def search(request, redirect=False, template_name="events/search.html"):
 
     return render_to_response(
         template_name,
-        {'events': events,'types': types, 'now': datetime.now(), 'event_type': event_type, 'start_dt': start_dt},
+        {'events': events,'types': types, 'now': datetime.now(), 'event_type': event_type, 'start_dt': start_dt, 'with_registration': with_registration,},
         context_instance=RequestContext(request)
     )
 
