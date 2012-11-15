@@ -29,4 +29,7 @@ class Redirect(models.Model):
     objects = RedirectManager()
     
     def __unicode__(self):
-        return "Redirect URL: %s" % self.from_url
+        if self.from_app:
+            return "Redirect from App: %s" % self.from_app
+        else:
+            return "Redirect from URL: %s" % self.from_url
