@@ -8,7 +8,7 @@ from tendenci.core.registry import site
 class RedirectForm(forms.ModelForm):
     
     from_app = forms.ChoiceField(choices=[], required=False,
-        help_text=_("If this app is disabled, redirect users to the specified URL."))
+        help_text=_("You may only redirect from a disabled app. You do not need to enter a From URL if you choose an app. All URLs related to this app will be redirected to the URL you enter in the To URL field."))
 
     def __init__(self, *args, **kwargs):
         super(RedirectForm, self).__init__(*args, **kwargs)
