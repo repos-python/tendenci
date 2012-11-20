@@ -863,7 +863,7 @@ class Event(TendenciBaseModel):
     Calendar Event
     """
     guid = models.CharField(max_length=40, editable=False)
-    type = models.ForeignKey(Type, blank=True, null=True)
+    type = models.ForeignKey(Type, blank=True, null=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=150, blank=True)
     description = models.TextField(blank=True)
     all_day = models.BooleanField()
@@ -880,6 +880,7 @@ class Event(TendenciBaseModel):
         help_text=_('Photo that represents this event.'), null=True, blank=True)
     group = models.ForeignKey(Group, null=True, on_delete=models.SET_NULL, default=get_default_group)
     tags = TagField(blank=True)
+    priority = models.BooleanField(default=False, help_text=_("Priority events will show up at the top of the events list. They will be featured with a star icon on the monthly calendar."))
 
     # additional permissions
     display_event_registrants = models.BooleanField(_('Display Attendees'), default=False)
