@@ -10,10 +10,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import simplejson as json
 
 from tendenci.core.base.http import Http403
-from tendenci.core.site_settings.models import Setting
 from tendenci.core.perms.utils import has_perm
 from tendenci.core.event_logs.models import EventLog
-from tendenci.core.theme.utils import get_theme, theme_options, theme_choices as theme_choice_list
+from tendenci.core.theme.utils import get_theme, theme_choices as theme_choice_list
 from tendenci.apps.theme_editor.models import ThemeFileVersion
 from tendenci.apps.theme_editor.forms import FileForm, ThemeSelectForm, UploadForm
 from tendenci.apps.theme_editor.utils import get_dir_list, get_file_list, get_file_content, get_all_files_list
@@ -35,14 +34,6 @@ def edit_file(request, form_class=FileForm, template_name="theme_editor/index.ht
         theme_root = os.path.join(settings.THEME_S3_PATH, selected_theme)
     else:
         theme_root = os.path.join(settings.ORIGINAL_THEMES_DIR, selected_theme)
-
-    # refresh input value for themes
-    refresh_theme_list = request.GET.get('scan_themes', False)
-    if refresh_theme_list:
-        setting = Setting.objects.get(name='theme')
-        if setting.input_value != theme_options():
-            setting.input_value = theme_options()
-            setting.save()
 
     # get the default file and clean up any input
     default_file = request.GET.get("file", DEFAULT_FILE)

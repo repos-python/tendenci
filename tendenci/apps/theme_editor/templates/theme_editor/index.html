@@ -67,10 +67,6 @@
                 <form method="GET" action="">
                     {{ theme_form.theme_edit }}<input class="btn btn-mini" type="submit" value="Change"/>
                 </form>
-                <form method="GET" action="">
-                    <input type="hidden" id="id_scan_themes" name="scan_themes" value="True"/>
-                    <input class="btn btn-mini" type="submit" value="Scan for new themes"/>
-                </form>
                 {% ifnotequal ACTIVE_THEME current_theme %}
                 <p><a href="{% url home %}?theme={{ current_theme }}" target="_blank">{% trans "Preview" %} <strong>{{ current_theme }}</strong> {% trans "on your site" %} &raquo;</a></p>
                 {% endifnotequal %}
