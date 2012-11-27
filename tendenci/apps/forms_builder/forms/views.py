@@ -415,9 +415,10 @@ def form_detail(request, slug, template="forms/form_detail.html"):
                     for i in range(0, 10):
                         password += random.choice(string.ascii_lowercase + string.ascii_uppercase)
 
-                    try:
-                        anonymous_creator = User.objects.get(email=emailfield)
-                    except User.DoesNotExist:
+                    user_list = User.objects.filter(email=emailfield).order_by('-last_login')
+                    if user_list:
+                        anonymous_creator = user_list[0]
+                    else:
                         anonymous_creator = User(username=emailfield, email=emailfield, 
                                                  first_name=firstnamefield, last_name=lastnamefield)
                         anonymous_creator.set_password(password)
