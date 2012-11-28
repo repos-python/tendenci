@@ -385,6 +385,8 @@ def template_update(request, template_id):
     else:
         zip_url = ""
     
+    html_url += "?jump_links=1&articles=1&articles_days=60&news=1&news_days=60&jobs=1&jobs_days=60&pages=1&pages_days=7"
+    
     #sync with campaign monitor
     try:
         t = CST(template_id = template.template_id)
