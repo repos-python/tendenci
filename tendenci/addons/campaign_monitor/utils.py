@@ -93,7 +93,8 @@ def sync_templates():
             html_url += "&events=1"
             html_url += "&events_type="
             html_url += "&event_start_dt=%s" % datetime.date.today()
-            html_url += "&event_end_dt=%s" % datetime.date.today() + timedelta(days=90)
+            end_dt = datetime.date.today() + timedelta(days=90)
+            html_url += "&event_end_dt=%s" % end_dt
         except ImportError:
             pass
 
