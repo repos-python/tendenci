@@ -98,7 +98,7 @@ def sync_templates():
         except ImportError:
             pass
 
-        if t.zip_file:
+        if template.zip_file:
             if hasattr(settings, 'USE_S3_STORAGE') and settings.USE_S3_STORAGE:
                 zip_url = unicode(template.get_zip_url())
             else:
