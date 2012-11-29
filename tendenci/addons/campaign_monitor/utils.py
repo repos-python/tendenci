@@ -86,11 +86,11 @@ def sync_templates():
             template = Template(template_id = t.TemplateID)        
         #set up urls
         site_url = get_setting('site', 'global', 'siteurl')
-        html_url = unicode("%s%s"%(site_url, t.get_html_url()))
+        html_url = unicode("%s%s"%(site_url, template.get_html_url()))
         html_url += "?jump_links=1&articles=1&articles_days=60&news=1&news_days=60&jobs=1&jobs_days=60&pages=1&pages_days=7"
         try:
             from tendenci.addons.events.models import Event, Type
-            html_url += "&events=1" % form.cleaned_data.get('events')
+            html_url += "&events=1"
             html_url += "&events_type="
             html_url += "&event_start_dt=%s" % datetime.date.today()
             html_url += "&event_end_dt=%s" % datetime.date.today() + timedelta(days=90)
@@ -99,15 +99,15 @@ def sync_templates():
 
         if t.zip_file:
             if hasattr(settings, 'USE_S3_STORAGE') and settings.USE_S3_STORAGE:
-                zip_url = unicode(t.get_zip_url())
+                zip_url = unicode(template.get_zip_url())
             else:
-                zip_url = unicode("%s%s"%(site_url, t.get_zip_url()))
+                zip_url = unicode("%s%s"%(site_url, template.get_zip_url()))
         else:
             zip_url = unicode()
         
         #sync with campaign monitor
         try:
-            t = CST(template_id = t.template_id)
+            t = CST(template_id = template.template_id)
             t.update(unicode(template.name), html_url, zip_url)
         except BadRequest, e:
             messages.add_message(request, messages.ERROR, 'Bad Request %s: %s' % (e.data.Code, e.data.Message))
