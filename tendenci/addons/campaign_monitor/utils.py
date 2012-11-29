@@ -15,7 +15,7 @@ from createsend import CreateSend, Client, Subscriber
 from createsend.createsend import BadRequest
 
 from tendenci.addons.campaign_monitor.models import Campaign, Template
-
+from tendenci.core.site_settings.utils import get_setting
 
 api_key = getattr(settings, 'CAMPAIGNMONITOR_API_KEY', None)
 api_password = getattr(settings, 'CAMPAIGNMONITOR_API_PASSWORD', None)
