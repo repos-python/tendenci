@@ -4,8 +4,8 @@ import random
 import string
 import zipfile
 import shutil
-
-from datetime import datetime
+import datetime
+from datetime import timedelta
 
 from django.conf import settings
 from django.core.files.storage import default_storage
