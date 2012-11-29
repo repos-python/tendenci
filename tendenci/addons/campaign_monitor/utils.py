@@ -15,6 +15,7 @@ from django.shortcuts import redirect
 
 from createsend import CreateSend, Client, Subscriber
 from createsend.createsend import BadRequest
+from createsend import Template as CST
 
 from tendenci.addons.campaign_monitor.models import Campaign, Template
 from tendenci.core.site_settings.utils import get_setting
