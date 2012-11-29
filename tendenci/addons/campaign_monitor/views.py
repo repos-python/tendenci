@@ -437,7 +437,7 @@ def template_sync(request):
     if not has_perm(request.user,'campaign_monitor.add_template'):
         raise Http403
     
-    sync_templates()
+    sync_templates(request)
     
     messages.add_message(request, messages.SUCCESS, 'Successfully synced with Campaign Monitor')
     return redirect("campaign_monitor.template_index")

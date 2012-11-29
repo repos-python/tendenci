@@ -77,7 +77,7 @@ def sync_campaigns():
         campaign.preview_url = c.PreviewURL
         campaign.save()
 
-def sync_templates():
+def sync_templates(request):
     if hasattr(cl,'templates'): templates = cl.templates()
     else: templates = []
     for t in templates:
