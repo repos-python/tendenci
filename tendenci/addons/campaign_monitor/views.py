@@ -1,5 +1,6 @@
 import datetime
 import os
+from datetime import timedelta
 from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -386,6 +387,17 @@ def template_update(request, template_id):
         zip_url = ""
     
     html_url += "?jump_links=1&articles=1&articles_days=60&news=1&news_days=60&jobs=1&jobs_days=60&pages=1&pages_days=7"
+    try:
+        from tendenci.addons.events.models import Event, Type
+        html_url += "&events=1"
+        html_url += "&events_type="
+        html_url += "&event_start_dt=%s" % datetime.date.today()
+        end_dt = datetime.date.today() + timedelta(days=90)
+        html_url += "&event_end_dt=%s" % end_dt
+    except ImportError:
+        pass
+
+    print html_url
     
     #sync with campaign monitor
     try:
