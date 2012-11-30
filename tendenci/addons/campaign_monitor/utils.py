@@ -119,6 +119,8 @@ def sync_templates(request):
         except Exception, e:
             messages.add_message(request, messages.ERROR, 'Error: %s' % e)
             return redirect('campaign_monitor.template_index')
+        #get campaign monitor details
+        t = t.details()
         template.name = t.Name
         template.cm_preview_url = t.PreviewURL
         template.cm_screenshot_url = t.ScreenshotURL
